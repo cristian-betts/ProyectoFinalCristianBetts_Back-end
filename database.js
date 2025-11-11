@@ -1,13 +1,13 @@
 // Importamos mongoose para conectarnos a la base de datos
 import mongoose from 'mongoose';
 
-// URL de conexión a tu base de datos.
-const uri = "mongodb+srv://jacobogarcesoquendo:aFJzVMGN3o7fA38A@cluster0.mqwbn.mongodb.net/{CristianBetts}";
+import dotenv from 'dotenv';
+dotenv.config();
 
 // Función asíncrona para conectarse a la base de datos
 export async function connectDB() {
   try {
-    await mongoose.connect(uri, {
+    await mongoose.connect(process.env.URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -18,4 +18,4 @@ export async function connectDB() {
   }
 }
 // Exportamos la función para usarla desde index.js
-export default connectDB;
+export default connectDB; mongoose;
