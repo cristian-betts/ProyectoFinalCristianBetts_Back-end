@@ -7,7 +7,7 @@ const router = express.Router();
 import Juego from './juegos.js';
 
 // Definimos el esquema de las reseñas
-const reseñaSchema = new mongoose.Schema({
+const resenaSchema = new mongoose.Schema({
   juegoId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Juego', // Se relaciona con el ID del juego
@@ -44,13 +44,13 @@ const reseñaSchema = new mongoose.Schema({
 });
 
 // Middleware para actualizar automáticamente la fecha de actualización
-reseñaSchema.pre('save', function (next) {
+resenaSchema.pre('save', function (next) {
   this.fechaActualizacion = new Date();
   next();
 });
 
 // Creamos el modelo
-const Reseña = mongoose.model('Reseña', reseñaSchema);
+const Reseña = mongoose.model('Resena', resenaSchema);
 
 /*CRUD DE RESEÑAS*/
 
@@ -63,7 +63,7 @@ router.post('/', async (req, res) => {
     if (!juego) {
       return res.status(404).json({ mensaje: 'Juego no encontrado' });
     }
-    const nuevaReseña = new Reseña({
+    const nuevaResena = new Resena({
       juegoId,
       puntuacion,
       textoReseña,
@@ -71,8 +71,8 @@ router.post('/', async (req, res) => {
       dificultad,
       recomendaria,
     });
-    await nuevaReseña.save();
-    res.status(201).json(nuevaReseña);
+    await nuevaResena.save();
+    res.status(201).json(nuevaResena);
 
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -82,8 +82,8 @@ router.post('/', async (req, res) => {
 //Obtener todas las reseñas (con datos del juego)
 router.get('/', async (req, res) => {
   try {
-    const reseñas = await Reseña.find().populate('juegoId');
-    res.json(reseñas);
+    const resenas = await Resena.find().populate('juegoId');
+    res.json(resenas);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -92,11 +92,11 @@ router.get('/', async (req, res) => {
 //Obtener una reseña por ID
 router.get('/:id', async (req, res) => {
   try {
-    const reseña = await Reseña.findById(req.params.id).populate('juegoId');
-    if (!reseña) {
+    const resena = await Resena.findById(req.params.id).populate('juegoId');
+    if (!resena) {
       return res.status(404).json({ mensaje: 'Reseña no encontrada' });
     }
-    res.json(reseña);
+    res.json(resena);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -105,17 +105,17 @@ router.get('/:id', async (req, res) => {
 //Actualizar una reseña
 router.put('/:id', async (req, res) => {
   try {
-    const reseñaActualizada = await Reseña.findByIdAndUpdate(
+    const resenaActualizada = await Resena.findByIdAndUpdate(
       req.params.id,
       { ...req.body, fechaActualizacion: new Date() },
       { new: true }
     );
 
-    if (!reseñaActualizada) {
+    if (!resenaActualizada) {
       return res.status(404).json({ mensaje: 'Reseña no encontrada' });
     }
 
-    res.json(reseñaActualizada);
+    res.json(resenaActualizada);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -124,8 +124,8 @@ router.put('/:id', async (req, res) => {
 //Eliminar una reseña
 router.delete('/:id', async (req, res) => {
   try {
-    const reseñaEliminada = await Reseña.findByIdAndDelete(req.params.id);
-    if (!reseñaEliminada) {
+    const resenaEliminada = await Reseña.findByIdAndDelete(req.params.id);
+    if (!resenaEliminada) {
       return res.status(404).json({ mensaje: 'Reseña no encontrada' });
     }
     res.json({ mensaje: 'Reseña eliminada correctamente' });
