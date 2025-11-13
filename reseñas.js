@@ -61,7 +61,7 @@ router.post('/', async (req, res) => {
     // Verificamos que el juego exista antes de crear la reseña
     const juego = await Juego.findById(juegoId);
     if (!juego) {
-      return res.status(404).json({ mensaje: 'Juego no encontrado' });
+      return res.status(404).json({ mensaje: 'Juego no encontrado'});
     }
     const nuevaResena = new Resena({
       juegoId,
